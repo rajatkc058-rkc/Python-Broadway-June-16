@@ -1,0 +1,45 @@
+import requests
+import mysql.connector
+
+db = mysql.connector.connect(
+    host="localhost", user="root", port=3306, database="projectwork"
+)
+terminal = db.cursor()
+# query = """create table FIFA_GAMES (Homeid int,
+# Awayid int,
+# Hometeamname varchar(30),
+# Awayteamname varchar(30),
+# Homescore int,
+# Awayscore int,
+# Homescorer varchar(100),
+# Awayscorer varchar(100)
+# );"""
+# terminal.execute(query)
+# db.commit()
+url = "https://worldcup26.ir/get/games"
+try:
+    r = requests.get(url=url)
+    if r.status_code == 200:
+        data = r.json()
+        data2 = data.get("games")
+        final_data = data2
+        upload = []
+        for i in final_data:
+            query = "INSERT INTO FIFA_GAMES (Homeid, Awayid, Hometeamname,Awayteamname,Homescore,Awayscore,Homescorer,Awayscorer) Values (%s, %s, %s, %s, %s, %s, %s, %s)"
+            upload_1 = [
+                i.get("home_team_id"),
+                i.get("away_team_id"),
+                i.get("home_team_name_en"),
+                i.get("away_team_name_en"),
+                i.get("home_score"),
+                i.get("away_score"),
+                i.get("home_scorers"),
+                i.get("away_scorers"),
+            ]
+            upload.append(upload_1)
+        terminal.executemany(query,upload)
+        db.commit()
+    else:
+        print("something went wrong")
+except Exception as e:
+    print("Error:", e)

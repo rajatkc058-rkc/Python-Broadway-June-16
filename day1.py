@@ -1,3 +1,3 @@
-a = 10
-b = 5
-print("Hello")
+print("Hello") #stirng
+a =10
+print(a) #variable

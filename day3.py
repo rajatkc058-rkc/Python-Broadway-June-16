@@ -43,8 +43,6 @@ elif( monthlyincome <3000):
             print('Reject')
     else:
         print('Reject')
-else:
-    print('reject')
 
 
 
